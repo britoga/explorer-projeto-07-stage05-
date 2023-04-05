@@ -1,9 +1,14 @@
 import { Modal } from './modal.js'
+import { AlertError } from "./alert-error.js"
+import { notANumber, imcCalculate } from "./utils.js"
 
-// Variáveis
 const form = document.querySelector("form");
 const inputWeight = document.querySelector("#weight")
 const inputHeight = document.querySelector("#height")
+
+// Fechar janela de erro quando começar a digitar algo nos inputs
+inputWeight.oninput = () => AlertError.close();
+inputHeight.oninput = () => AlertError.close();
 
 form.onsubmit = event => {
     event.preventDefault();
@@ -11,26 +16,21 @@ form.onsubmit = event => {
     const weight = inputWeight.value;
     const height = inputHeight.value;
 
-    /* Passando a validação para verificar se é um numero ou não */
-    const showAlertError = notANumber(weight) || notANumber(height)
-    if (showAlertError) {
-        console.log("Não é um numero")
+    const weightOrHeightIsNotANumber = notANumber(weight) || notANumber(height)
+    if (weightOrHeightIsNotANumber) {
+        AlertError.open();
         return; 
+    } else {
+        AlertError.close();
     }
 
     const result = imcCalculate(weight, height);
+    displayResultMessage(result)
+}
+
+function displayResultMessage(result) {
     const message = `Seu IMC é de ${result}`;
 
     Modal.message.innerText = message;
     Modal.open();
-}
-
-/* Validar se o que está sendo escrito é um numero ou não */
-function notANumber(value) {
-    return isNaN(value) || value == "";
-}
-
-function imcCalculate(weight, height) {
-    let calculateImc = (weight / ((height / 100) ** 2)).toFixed(2)
-    return calculateImc; 
 }
