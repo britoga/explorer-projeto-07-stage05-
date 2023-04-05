@@ -16,3 +16,15 @@ export const Modal = {
 Modal.buttonClose.onclick = () => {
     Modal.close();
 }
+
+/* Fechar modal pelo ESC */
+
+window.addEventListener("keydown", handleKeyDown);
+
+function handleKeyDown(event) {
+    console.log(event.key) // Verificar teclas que estão sendo digitadas
+
+    if (event.key === "Escape") {
+        Modal.close()
+    }
+}
